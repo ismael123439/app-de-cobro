@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda - Carrito de Compras</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Tienda Online</h1>
+            <a href="{{ url_for('carrito') }}" class="cart-link">Ver Carrito</a>
+        </div>
+    </header>
+    <section class="products">
+        <div class="product" data-name="Objeto 1" data-price="100">
+            <h2>Objeto 1</h2>
+            <p>Precio: $100</p>
+            <button class="add-to-cart">Añadir al carrito</button>
+        </div>
+        <div class="product" data-name="Objeto 2" data-price="150">
+            <h2>Objeto 2</h2>
+            <p>Precio: $150</p>
+            <button class="add-to-cart">Añadir al carrito</button>
+        </div>
+        <div class="product" data-name="Objeto 3" data-price="200">
+            <h2>Objeto 3</h2>
+            <p>Precio: $200</p>
+            <button class="add-to-cart">Añadir al carrito</button>
+        </div>
+
+        <div class="product" data-name="Objeto 4" data-price="250">
+            <h2>Objeto 4</h2>
+            <p>Precio: $250</p>
+            <button class="add-to-cart">Añadir al carrito</button>
+        </div>
+    </section>
+    <script src="/static/js/index.js"></script>
+</body>
+</html>

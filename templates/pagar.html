@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago con Mercado Pago</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="{{ url_for('static', filename='mp.js') }}"></script>
+</head>
+<body>
+    <h2>Realizar Pago</h2>
+    <form id="paymentForm">
+        <div>
+            <label for="cardNumber">Número de tarjeta</label>
+            <input type="text" id="cardNumber" data-checkout="cardNumber">
+        </div>
+
+        <div>
+            <label for="cardExpirationMonth">Mes de expiración</label>
+            <input type="text" id="cardExpirationMonth" data-checkout="cardExpirationMonth">
+        </div>
+
+        <div>
+            <label for="cardExpirationYear">Año de expiración</label>
+            <input type="text" id="cardExpirationYear" data-checkout="cardExpirationYear">
+        </div>
+
+        <div>
+            <label for="securityCode">Código de seguridad</label>
+            <input type="text" id="securityCode" data-checkout="securityCode">
+        </div>
+
+        <div>
+            <label for="cardholderName">Nombre en la tarjeta</label>
+            <input type="text" id="cardholderName" data-checkout="cardholderName">
+        </div>
+
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email">
+        </div>
+
+        <div>
+            <label for="installments">Cuotas</label>
+            <input type="text" id="installments" name="installments">
+        </div>
+
+        <div>
+            <label for="amount">Monto</label>
+            <input type="text" id="amount" name="amount">
+        </div>
+
+        <input type="hidden" id="paymentMethodId" name="payment_method_id">
+        <input type="hidden" id="token" name="token">
+
+        <button type="submit" id="submitBtn">Pagar</button>
+    </form>
+    <script>
+        // Inicializar el objeto de Mercado Pago
+const mp = new MercadoPago('TEST-c07b6bf0-ab09-4017-ab02-46b59dfb49dd');  
+document.getElementById('cardNumber').addEventListener('keyup', guessPaymentMethod);
+document.getElementById('cardNumber').addEventListener('change', guessPaymentMethod);
+
+function guessPaymentMethod(event) {
+    let cardnumber = document.getElementById("cardNumber").value;
+    if (cardnumber.length >= 6) {
+        let bin = cardnumber.substring(0,6);
+        mp.getPaymentMethod({
+            "bin": bin
+        }).then(function(response) {
+            let paymentMethod = response.results[0];
+            document.getElementById('paymentMethodId').value = paymentMethod.id;
+        }).catch(function(error) {
+            console.log(error);
+        });
+    }
+}
+
+// Crear el token de la tarjeta y evitar que se envíe el formulario antes
+document.getElementById('paymentForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const cardData = {
+        cardNumber: document.getElementById('cardNumber').value,
+        cardExpirationMonth: document.getElementById('cardExpirationMonth').value,
+        cardExpirationYear: document.getElementById('cardExpirationYear').value,
+        securityCode: document.getElementById('securityCode').value,
+        cardholderName: document.getElementById('cardholderName').value,
+        docType: 'DNI',  // Tipo de documento, por ejemplo DNI
+        docNumber: '12345678'  // Número de documento
+    };
+
+    mp.createCardToken(cardData).then(function(response) {
+        document.getElementById('token').value = response.id;
+        document.getElementById('paymentForm').submit();
+    }).catch(function(error) {
+        console.log(error);
+    });
+});
+
+    </script>
+</body>
+</html>
